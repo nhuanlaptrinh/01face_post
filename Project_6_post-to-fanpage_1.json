@@ -1,0 +1,1120 @@
+{
+  "name": "Project_6_post-to-fanpage",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "bb393a9a-4fb8-479e-8fcd-75ea379c0b4e",
+      "name": "OpenAI Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        832,
+        80
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "b6rxKFJAZ34SgUMO",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{\n\"Viết nội dung dựa trên Prompts: \\\"\" + $json.Prompts + \" \" +\n\"Từ khóa liên quan:  \" + $json.Keywords + \"\\\"\\n\\n\" +\n\"Yêu cầu:\\n\" +\n\"- SEO Title (không thêm chữ SEO Title vào).\\n\" +\n\"- Meta Description dài 120–155 ký tự.\\n\" +\n\"- Description phải là TOÀN BỘ bài viết ~200 từ, không markdown, không tiêu đề.\\n\" +\n\"- Từ khóa SEO: chọn giày, kích cỡ giày, mua giày, giày thể thao.\\n\" +\n\"- Nội dung thân thiện, dễ hiểu, có CTA và 2–3 emoji.\\n\" +\n\"- Cuối Description KHÔNG để hashtag.\\n\" +\n\"- Tạo 5–7 hashtag để bỏ riêng ở field hastag.\\n\" +\n\"- Tạo 4 tên hình ảnh chuẩn SEO, không dấu, có ý nghĩa.\\n\\n\" +\n\"Loại bài: \\\"\" + $json.Type + \"\\\"\\n\\n\" +\n\"Hãy trả về DUY NHẤT JSON:\\n\" +\n\"{\\n\" +\n\" \\\"title\\\": \\\"\\\",\\n\" +\n\" \\\"meta\\\": \\\"\\\",\\n\" +\n\" \\\"description\\\": \\\"\\\",\\n\" +\n\" \\\"hastag\\\": \\\"\\\",\\n\" +\n\" \\\"image1\\\": \\\"\\\",\\n\" +\n\" \\\"image2\\\": \\\"\\\",\\n\" +\n\" \\\"image3\\\": \\\"\\\",\\n\" +\n\" \\\"image4\\\": \\\"\\\"\\n\" +\n\"}\\n\\n\" +\n\"Không trả văn bản ngoài JSON.\"\n}}\n",
+        "options": {
+          "systemMessage": "=Bạn là chuyên gia viết nội dung SEO Marketing cho Fanpage bán giày thể thao \"Lê Quốc Tùng Sport\". Viết bài viết hấp dẫn, tự nhiên, có tính SEO cao. Mỗi bài khoảng 200 từ đến 300 từ, sử dụng từ khóa một cách tự nhiên. Phong cách thân thiện, dễ đọc, có emoji và hashtag phù hợp. Luôn kết thúc bằng call-to-action."
+        }
+      },
+      "id": "6f130eef-100e-49b5-95c0-7ffff15e94f4",
+      "name": "AI Content Generator",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        736,
+        -192
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "4f988da7-caaa-4c7d-9613-2c20b0a07473",
+      "name": "Manual Trigger - Generate 30 Posts",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        176,
+        -192
+      ]
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "title",
+              "description": "Đây là Tiêu Đề Bài Viết (ko được thêm chữ SEO Title)"
+            },
+            {
+              "name": "description",
+              "description": "Đây là mô tả của bài viết bắt đầu sau chữ Met Desction: đến trước Hastag khoảng dưới 200 từ "
+            },
+            {
+              "name": "hastag",
+              "description": "Đây là Hastag của bài viết"
+            },
+            {
+              "name": "image1",
+              "description": "Đây là tên Hình ảnh 1 Chuẩn SEO của bài viết phải là tên hay . Cấm xài những tên như hinh-anh.jpg"
+            },
+            {
+              "name": "image2",
+              "description": "Đây là tên Hình ảnh 2 Chuẩn SEO của bài viết phải là tên hay . Cấm xài những tên như hinh-anh.jpg"
+            },
+            {
+              "name": "image3",
+              "description": "Đây là tên Hình ảnh 3 Chuẩn SEO của bài viết phải là tên hay . Cấm xài những tên như hinh-anh.jpg"
+            },
+            {
+              "name": "image4",
+              "description": "Đây là tên Hình ảnh 4 Chuẩn SEO của bài viết phải là tên hay . Cấm xài những tên như hinh-anh.jpg"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        1136,
+        -192
+      ],
+      "id": "77280387-969c-4945-b795-09a748a0af3d",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI",
+          "mode": "list",
+          "cachedResultName": "30_Bai_Viet_Le_Quoc_Tung_Sport_UTF8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2030457335,
+          "mode": "list",
+          "cachedResultName": "30_Bai_Viet_Le_Quoc_Tung_Sport_UTF8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI/edit#gid=2030457335"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}",
+            "Title": "={{ $json.output.title }}",
+            "Description": "={{ $json.output.description }}",
+            "Hastag": "={{ $json.output.hastag }}",
+            "Image2": "={{ $json.output.image2 }}",
+            "Image3": "={{ $json.output.image3 }}",
+            "Image1": "={{ $json.output.image1 }}",
+            "Image4": "={{ $json.output.image4 }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Prompts",
+              "displayName": "Prompts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Image1",
+              "displayName": "Image1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Hastag",
+              "displayName": "Hastag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image2",
+              "displayName": "Image2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Image3",
+              "displayName": "Image3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Image4",
+              "displayName": "Image4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1536,
+        -192
+      ],
+      "id": "b728e802-02d7-495d-8161-6da52c024a87",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AUYa7oIztwAy0qvk",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "495919ca-ed10-4237-bd79-c42098b08fea",
+              "leftValue": "={{ $json.Status }}",
+              "rightValue": "Run",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        896
+      ],
+      "id": "c7169efa-5959-4f4b-a537-1229abd50f38",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI",
+          "mode": "list",
+          "cachedResultName": "30_Bai_Viet_Le_Quoc_Tung_Sport_UTF8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2030457335,
+          "mode": "list",
+          "cachedResultName": "30_Bai_Viet_Le_Quoc_Tung_Sport_UTF8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI/edit#gid=2030457335"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Pro",
+            "row_number": "={{ $('Lấy  File Google Sheet').item.json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Prompts",
+              "displayName": "Prompts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image1",
+              "displayName": "Image1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hastag",
+              "displayName": "Hastag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image2",
+              "displayName": "Image2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image3",
+              "displayName": "Image3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image4",
+              "displayName": "Image4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        464,
+        880
+      ],
+      "id": "a3e63955-a8e4-4940-a165-e7118ebc1076",
+      "name": "Cập Nhật Trạng Thái Trong Google Sheet",
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AUYa7oIztwAy0qvk",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "396dc159-9a4e-4931-b321-d997d1072107",
+              "leftValue": "={{ $json.Status }}",
+              "rightValue": "Pro",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        704,
+        880
+      ],
+      "id": "6b8393fa-3b38-4ba1-a156-41eeccbbd050",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -352,
+        896
+      ],
+      "id": "bc9e9c94-af51-4ab2-9da6-c84351f24c99",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI",
+          "mode": "list",
+          "cachedResultName": "30_Bai_Viet_Le_Quoc_Tung_Sport_UTF8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2030457335,
+          "mode": "list",
+          "cachedResultName": "30_Bai_Viet_Le_Quoc_Tung_Sport_UTF8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI/edit#gid=2030457335"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -80,
+        896
+      ],
+      "id": "a2c31fba-77fa-4dc5-975f-3a231f4d101b",
+      "name": "Lấy  File Google Sheet",
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AUYa7oIztwAy0qvk",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI",
+          "mode": "list",
+          "cachedResultName": "30_Bai_Viet_Le_Quoc_Tung_Sport_UTF8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2030457335,
+          "mode": "list",
+          "cachedResultName": "30_Bai_Viet_Le_Quoc_Tung_Sport_UTF8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI/edit#gid=2030457335"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        -192
+      ],
+      "id": "d0e50a08-d05e-4c88-9e92-16e2a97bf25f",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AUYa7oIztwAy0qvk",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "graphApiVersion": "v23.0",
+        "node": "me",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        864
+      ],
+      "id": "d3a25f73-80d5-48fb-b1c9-57bddeff1883",
+      "name": "Get Page ID1",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "I3ChqX10LsTmFgbR",
+          "name": "Fanpage LE Quoc Tung"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "=Từ cái {{ $('Lấy  File Google Sheet').item.json.Image1 }} . Bạn hãy gen ra hình ảnh cho phù hợp nha. Ảnh có dung lượng nhỏ thôi ",
+        "options": {
+          "dalleQuality": "standard",
+          "size": "1024x1024",
+          "returnImageUrls": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1328,
+        864
+      ],
+      "id": "f570c122-a9a5-4e61-89e8-0aff2f6a3a41",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": "b6rxKFJAZ34SgUMO",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "node": "={{ $('Get Page ID1').item.json.id }}",
+        "edge": "photos",
+        "sendBinaryData": true,
+        "binaryPropertyName": "data",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "published",
+                "value": "false"
+              },
+              {
+                "name": "source",
+                "value": "={{$binary.data}}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        864
+      ],
+      "id": "4f8a505b-992a-4ed1-84d5-8eb5bb3e73d6",
+      "name": "Upload Hình",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "I3ChqX10LsTmFgbR",
+          "name": "Fanpage LE Quoc Tung"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "node": "={{ $('Get Page ID1').item.json.id }}",
+        "edge": "feed",
+        "options": {
+          "queryParametersJson": "={\n  \"message\": \"🎯 {{ $('Lấy  File Google Sheet').item.json.Title }}\\n\\n{{ $('Lấy  File Google Sheet').item.json.Description }}\\n\\n⏰ ƯU ĐÃI CÓ HẠN - NHANH TAY KẺO LỠ!\\n\\n🎁 Quà tặng hấp dẫn khi mua hàng\\n🚀 Giao hàng nhanh trong 24h\\n💯 Đảm bảo chất lượng\\n\\n👉 INBOX NGAY để được tư vấn chi tiết!\\n📲 Hotline/Zalo: 0991112222\\n\\n{{ $('Lấy  File Google Sheet').item.json.Hastag }}\",\n  \"attached_media\": {{ JSON.stringify($json.data.map(item => ({ media_fbid: item.id }))) }}\n}"
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        2656,
+        864
+      ],
+      "id": "0286553b-4ede-4f2b-9370-5c9f5a612225",
+      "name": "Post to Facebook2",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "I3ChqX10LsTmFgbR",
+          "name": "Fanpage LE Quoc Tung"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        864
+      ],
+      "id": "d7211a6e-e9dd-4bdc-8150-70a63ca1cc06",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "content": "Workflow Tạo Bài Viết và Lưu vào GG Sheet\n",
+        "height": 688,
+        "width": 1920
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -336
+      ],
+      "id": "6b348e35-76fe-467c-99bb-1174a3ca7267",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Workflow Tạo Ảnh và Post Bài lên Fanpage theo ngày\n",
+        "height": 944,
+        "width": 3792,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        496
+      ],
+      "id": "ac9c1890-9ca3-4920-aa74-687bb0cde74e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI",
+          "mode": "list",
+          "cachedResultName": "30_Bai_Viet_Le_Quoc_Tung_Sport_UTF8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2030457335,
+          "mode": "list",
+          "cachedResultName": "30_Bai_Viet_Le_Quoc_Tung_Sport_UTF8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y6oLc70XX1BWW4hSh35UdFEL-ByrZ1dZMulzoYtBcYI/edit#gid=2030457335"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Success",
+            "row_number": "={{ $('Lấy  File Google Sheet').item.json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Prompts",
+              "displayName": "Prompts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image1",
+              "displayName": "Image1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hastag",
+              "displayName": "Hastag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image2",
+              "displayName": "Image2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image3",
+              "displayName": "Image3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image4",
+              "displayName": "Image4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2976,
+        864
+      ],
+      "id": "c736866f-b924-4362-bc28-f8e9d9f70cf6",
+      "name": "Cập Nhật Trạng Thái Trong Google Sheet1",
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AUYa7oIztwAy0qvk",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Content Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Content Generator": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger - Generate 30 Posts": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Cập Nhật Trạng Thái Trong Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cập Nhật Trạng Thái Trong Google Sheet": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Get Page ID1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Lấy  File Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lấy  File Google Sheet": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Page ID1": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Upload Hình",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Hình": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Post to Facebook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Facebook2": {
+      "main": [
+        [
+          {
+            "node": "Cập Nhật Trạng Thái Trong Google Sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "60ebf07e-17fc-4ad9-9ab2-ae369f77337d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d4b3ea1b3d09e3180d184fca687976b03162e48b2717c66faa7c750a34ed7d88"
+  },
+  "id": "Bd4aZwhl4HDxKeYW",
+  "tags": []
+}
